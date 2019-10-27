@@ -16,6 +16,10 @@ struct Vertex
     Vector4uc color;
 };
 
+float distance(Vector4f v1, Vector4f v2) {
+	return sqrtf(pow(v1.x() - v2.x(), 2) + pow(v1.y() - v2.y(), 2) + pow(v1.z() - v2.z(), 2));
+}
+
 bool WriteMesh(Vertex* vertices, unsigned int width, unsigned int height, const std::string& filename)
 {
     float edgeThreshold = 0.01f; // 1cm
@@ -51,15 +55,15 @@ bool WriteMesh(Vertex* vertices, unsigned int width, unsigned int height, const 
 
         bool face1 = v0.x() != MINF && v1.x() != MINF && v3.x() != MINF;
         // Check face 1 v0, v1, v3
-        if (face1) face1 = (v0 - v1).cwiseAbs().sum() < edgeThreshold;
-        if (face1) face1 = (v1 - v3).cwiseAbs().sum() < edgeThreshold;
-        if (face1) face1 = (v3 - v0).cwiseAbs().sum() < edgeThreshold;
+        if (face1) face1 = distance(v0, v1) < edgeThreshold;
+        if (face1) face1 = distance(v1, v3) < edgeThreshold;
+        if (face1) face1 = distance(v3, v0) < edgeThreshold;
 
         bool face2 = v1.x() != MINF && v2.x() != MINF && v3.x() != MINF;
         // Check face 2 v1, v2, v3
-        if (face2) face2 = (v1 - v2).cwiseAbs().sum() < edgeThreshold;
-        if (face2) face2 = (v2 - v3).cwiseAbs().sum() < edgeThreshold;
-        if (face2) face2 = (v3 - v1).cwiseAbs().sum() < edgeThreshold;
+        if (face2) face2 = distance(v1, v2) < edgeThreshold;
+        if (face2) face2 = distance(v2, v3) < edgeThreshold;
+        if (face2) face2 = distance(v3, v1) < edgeThreshold;
 
         if (face1) nFaces++;
         if (face2) nFaces++;
@@ -102,15 +106,15 @@ bool WriteMesh(Vertex* vertices, unsigned int width, unsigned int height, const 
 
         bool face1 = v0.x() != MINF && v1.x() != MINF && v3.x() != MINF;
         // Check face 1 v0, v1, v3
-        if (face1) face1 = (v0 - v1).cwiseAbs().sum() < edgeThreshold;
-        if (face1) face1 = (v1 - v3).cwiseAbs().sum() < edgeThreshold;
-        if (face1) face1 = (v3 - v0).cwiseAbs().sum() < edgeThreshold;
+        if (face1) face1 = distance(v0, v1) < edgeThreshold;
+        if (face1) face1 = distance(v1, v3) < edgeThreshold;
+        if (face1) face1 = distance(v3, v0) < edgeThreshold;
 
         bool face2 = v1.x() != MINF && v2.x() != MINF && v3.x() != MINF;
         // Check face 2 v1, v2, v3
-        if (face2) face2 = (v1 - v2).cwiseAbs().sum() < edgeThreshold;
-        if (face2) face2 = (v2 - v3).cwiseAbs().sum() < edgeThreshold;
-        if (face2) face2 = (v3 - v1).cwiseAbs().sum() < edgeThreshold;
+        if (face2) face2 = distance(v1, v2) < edgeThreshold;
+        if (face2) face2 = distance(v2, v3) < edgeThreshold;
+        if (face2) face2 = distance(v3, v1) < edgeThreshold;
 
         if (face1) outFile << "3 " << i << " " << i+width << " " << i+1 << std::endl;
         if (face2) outFile << "3 " << i+1 << " " << i+width << " " << i+1+width << std::endl;
