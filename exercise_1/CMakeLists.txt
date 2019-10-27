@@ -17,6 +17,8 @@ endif(WIN32)
 # Set C++ flags
 set(CMAKE_CXX_STANDARD 14)
 
+INCLUDE_DIRECTORIES(  /usr/local/Cellar/freeimage/3.18.0/include )
+LINK_DIRECTORIES(  /usr/local/Cellar/freeimage/3.18.0/lib )
 
 set(HEADERS 
     Eigen.h
