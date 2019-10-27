@@ -31,10 +31,39 @@ bool WriteMesh(Vertex* vertices, unsigned int width, unsigned int height, const 
 	// TODO: Get number of vertices
 	unsigned int nVertices = 0;
 
-	
+    for (unsigned int i = 0; i < width*height; ++i)
+    {
+        Vertex v = vertices[i];
+        if (v.position.x() != MINF) nVertices++;
+    }
 
 	// TODO: Determine number of valid faces
 	unsigned nFaces = 0;
+
+    for (unsigned int i = 0; i < width*height; ++i)
+    {
+        if ((i + 1) % width == 0) continue;
+        if ((int) (i / width) == height - 1) continue;
+        Vector4f v0 = vertices[i].position;
+        Vector4f v1 = vertices[i+1].position;
+        Vector4f v2 = vertices[i+1+width].position;
+        Vector4f v3 = vertices[i+width].position;
+
+        bool face1 = v0.x() != MINF && v1.x() != MINF && v3.x() != MINF;
+        // Check face 1 v0, v1, v3
+        if (face1) face1 = (v0 - v1).cwiseAbs().sum() < edgeThreshold;
+        if (face1) face1 = (v1 - v3).cwiseAbs().sum() < edgeThreshold;
+        if (face1) face1 = (v3 - v0).cwiseAbs().sum() < edgeThreshold;
+
+        bool face2 = v1.x() != MINF && v2.x() != MINF && v3.x() != MINF;
+        // Check face 2 v1, v2, v3
+        if (face2) face2 = (v1 - v2).cwiseAbs().sum() < edgeThreshold;
+        if (face2) face2 = (v2 - v3).cwiseAbs().sum() < edgeThreshold;
+        if (face2) face2 = (v3 - v1).cwiseAbs().sum() < edgeThreshold;
+
+        if (face1) nFaces++;
+        if (face2) nFaces++;
+    }
 
 	// Write off file
 	std::ofstream outFile(filename);
@@ -45,9 +74,44 @@ bool WriteMesh(Vertex* vertices, unsigned int width, unsigned int height, const 
 	outFile << nVertices << " " << nFaces << " 0" << std::endl;
 
 	// TODO: save vertices
+    for (unsigned int i = 0; i < width*height; ++i)
+    {
+        Vertex v = vertices[i];
+        if (v.position.x() != MINF) {
+            // X Y Z R G B A
+            outFile << v.position.x() << " " << v.position.y() << " " << v.position.z() << " ";
+            outFile << (int) v.color.x() << " " << (int) v.color.y() << " ";
+            outFile << (int) v.color.z() << " " << (int) v.color.w() << std::endl;
+        }
+    }
 	
 
 	// TODO: save valid faces
+
+    for (unsigned int i = 0; i < width*height; ++i)
+    {
+        if ((i + 1) % width == 0) continue;
+        if ((int) (i / width) == height - 1) continue;
+        Vector4f v0 = vertices[i].position;
+        Vector4f v1 = vertices[i+1].position;
+        Vector4f v2 = vertices[i+1+width].position;
+        Vector4f v3 = vertices[i+width].position;
+
+        bool face1 = v0.x() != MINF && v1.x() != MINF && v3.x() != MINF;
+        // Check face 1 v0, v1, v3
+        if (face1) face1 = (v0 - v1).cwiseAbs().sum() < edgeThreshold;
+        if (face1) face1 = (v1 - v3).cwiseAbs().sum() < edgeThreshold;
+        if (face1) face1 = (v3 - v0).cwiseAbs().sum() < edgeThreshold;
+
+        bool face2 = v1.x() != MINF && v2.x() != MINF && v3.x() != MINF;
+        // Check face 2 v1, v2, v3
+        if (face2) face2 = (v1 - v2).cwiseAbs().sum() < edgeThreshold;
+        if (face2) face2 = (v2 - v3).cwiseAbs().sum() < edgeThreshold;
+        if (face2) face2 = (v3 - v1).cwiseAbs().sum() < edgeThreshold;
+
+        if (face1) outFile << "3 " << i << " " << i+width << " " << i+1 << std::endl;
+        if (face2) outFile << "3 " << i+1 << " " << i+width << " " << i+1+width << std::endl;
+    }
 
 
 	// close file
@@ -101,7 +165,31 @@ int main()
 		// vertices[idx].color = Vector4uc(0,0,0,0);
 		// otherwise apply back-projection and transform the vertex to world space, use the corresponding color from the colormap
 		Vertex* vertices = new Vertex[sensor.GetDepthImageWidth() * sensor.GetDepthImageHeight()];
-		
+
+        for (unsigned int idx = 0; idx < sensor.GetDepthImageWidth() * sensor.GetDepthImageHeight(); ++idx)
+        {
+            float depth = depthMap[idx];
+
+            if (depth == MINF) {
+                vertices[idx].position = Vector4f(MINF, MINF, MINF, MINF);
+                vertices[idx].color = Vector4uc(0,0,0,0);
+
+                continue;
+            }
+
+            unsigned int ux = idx % sensor.GetDepthImageWidth();
+            unsigned int uy = idx / (unsigned int) sensor.GetDepthImageWidth();
+            const float x = depth * ((float) ux - cX) / fX;
+            const float y = depth * ((float) uy - cY) / fY;
+
+            Vector4f pCamera = Vector4f(x, y, depth, 1.0);
+
+            Vector4f pWorld = trajectoryInv * depthExtrinsicsInv * pCamera;
+
+            vertices[idx].color = Vector4uc(colorMap[4*idx], colorMap[4*idx+1], colorMap[4*idx+2], colorMap[4*idx+3]);
+            vertices[idx].position = pWorld;
+
+        }
 
 
 		// write mesh file
@@ -115,6 +203,8 @@ int main()
 
 		// free mem
 		delete[] vertices;
+
+		return 0;
 	}
 
 	return 0;
