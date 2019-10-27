@@ -34,3 +34,8 @@
 
 data
 libs
+
+.DS_Store
+
+.idea
+cmake-build-debug/
