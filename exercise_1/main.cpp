@@ -34,20 +34,15 @@ bool WriteMesh(Vertex* vertices, unsigned int width, unsigned int height, const 
 
     // TODO: Get number of vertices
     unsigned int nVertices = width * height;
-//
-//    for (unsigned int i = 0; i < width*height; ++i)
-//    {
-//        Vertex v = vertices[i];
-//        if (v.position.x() != MINF) nVertices++;
-//    }
 
     // TODO: Determine number of valid faces
-    unsigned nFaces =0;// width * height / 2;
+    unsigned nFaces = 0;
 
     for (unsigned int i = 0; i < width*height; ++i)
     {
         if ((i + 1) % width == 0) continue;
         if ((int) (i / width) == height - 1) continue;
+
         Vector4f v0 = vertices[i].position;
         Vector4f v1 = vertices[i+1].position;
         Vector4f v2 = vertices[i+1+width].position;
@@ -85,7 +80,7 @@ bool WriteMesh(Vertex* vertices, unsigned int width, unsigned int height, const 
             // X Y Z R G B A
             outFile << v.position.x() << " " << v.position.y() << " " << v.position.z() << " ";
             outFile << (int) v.color.x() << " " << (int) v.color.y() << " ";
-            outFile << (int) v.color.z() << " " << "255" << std::endl;
+            outFile << (int) v.color.z() << " " << (int) v.color.w() << std::endl;
         }
         else {
             outFile << "0 0 0 0 0 0 0" << std::endl;
@@ -190,7 +185,7 @@ int main()
             const float y = depth * ((float) uy - cY) / fY;
 
             Vector4f pCamera = Vector4f(x, y, depth, 1.0);
-
+            // E^-1 * K^-1 * pCamera
             Vector4f pWorld = trajectoryInv * depthExtrinsicsInv * pCamera;
 
             vertices[idx].color = Vector4uc(colorMap[4*idx], colorMap[4*idx+1], colorMap[4*idx+2], colorMap[4*idx+3]);
