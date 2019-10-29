@@ -42,7 +42,7 @@ bool WriteMesh(Vertex *vertices, unsigned int width, unsigned int height, const 
     unsigned nFaces = 0;
 
     /*
-     *  Calcuate all valid faces according to above conditions
+     *  Calculate all valid faces according to above conditions
      *  v0_____v1
      *   |    /|
      *   |  /  |
