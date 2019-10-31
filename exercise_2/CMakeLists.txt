@@ -11,6 +11,8 @@ set(Eigen3_INCLUDE_DIR ${LIBRARY_DIR}/Eigen/ CACHE PATH "Path to Eigen source fo
 # Set C++ flags
 set(CMAKE_CXX_STANDARD 14)
 
+INCLUDE_DIRECTORIES(  /usr/local/Cellar/freeimage/3.18.0/include )
+LINK_DIRECTORIES(  /usr/local/Cellar/freeimage/3.18.0/lib )
 
 # Define header and source files
 set(HEADERS
