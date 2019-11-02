@@ -22,7 +22,7 @@ public:
         // x^2 + y^2 + z^2 − R^2
         return pow(m_center.x() - _x.x(), 2) + // x component
                pow(m_center.y() - _x.y(), 2) + // y component
-               pow(m_center.z() - _x.z(), 2) -  // z component
+               pow(m_center.z() - _x.z(), 2) - // z component
                pow(m_radius, 2);
     }
 
@@ -152,15 +152,18 @@ public:
 
         double result = 0.0;
 
-        for (int i = 0; i < m_numCenters; ++i) {
+        for (int i = 0; i < m_numCenters; ++i) { // phi(p_i, x)
             Eigen::Vector3d pi = m_funcSamp.m_pos[i];
             result += m_coefficents[i] * EvalBasis((pi - _x).norm());
         }
 
-        Eigen::Vector3d b{m_coefficents[m_numCenters], m_coefficents[m_numCenters + 1],
-                          m_coefficents[m_numCenters + 2]};
+        Eigen::Vector3d b{
+                m_coefficents[m_numCenters + 0],
+                m_coefficents[m_numCenters + 1],
+                m_coefficents[m_numCenters + 2]
+        };
 
-        result += b.dot(_x);
+        result += b.dot(_x); // b * x
 
         result += m_coefficents[m_numCenters + 3]; // d
         return result;
@@ -187,13 +190,11 @@ private:
         // similar you access the elements of the vector b, e.g. b(i) for the i-th element
 
         for (unsigned int i = 0; i < 2 * m_numCenters; ++i) {
-            for (unsigned int j = 0; j < m_numCenters; ++j) {
-                A(i, j) = phi(i, j);
-            }
+            for (unsigned int j = 0; j < m_numCenters; ++j) A(i, j) = phi(i, j);
 
-            Eigen::Vector3d pi = m_funcSamp.m_pos[i];
+            Eigen::Vector3d &pi = m_funcSamp.m_pos[i];
 
-            A(i, m_numCenters) = pi.x();
+            A(i, m_numCenters + 0) = pi.x();
             A(i, m_numCenters + 1) = pi.y();
             A(i, m_numCenters + 2) = pi.z();
 
