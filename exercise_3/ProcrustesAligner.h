@@ -23,6 +23,14 @@ public:
         // You can access parts of the matrix with .block(start_row, start_col, num_rows, num_cols) = elements
         Matrix4f estimatedPose = Matrix4f::Identity();
 
+        std::cout << rotation << std::endl;
+        std::cout << translation << std::endl;
+
+        std::cout << '----------------' << std::endl;
+
+        std::cout << sourceMean << std::endl;
+        std::cout << targetMean << std::endl;
+
         // -R * xMean + t + xMean = -R * (yMean - t) + (yMean - xMean) + xMean = R * t + R * yMean + yMean
         estimatedPose.block(0, 0, 3, 3) = rotation;
         estimatedPose.block(0, 3, 3, 1) = rotation * translation - rotation * targetMean + targetMean;
@@ -59,7 +67,7 @@ private:
                 source(2, i) = p.z();
             }
             if (i < targetPoints.size()) {
-                Vector3f p = targetPoints[i] - targetMean; // Mean-centered
+                Vector3f p = targetPoints[i] - targetMean; // mean-centered
                 target(0, i) = p.x();
                 target(1, i) = p.y();
                 target(2, i) = p.z();

@@ -9,8 +9,8 @@
 int alignBunnyWithProcrustes() {
 	// Load the source and target mesh.
 	// Make sure the paths are correct.
-	const std::string filenameSource = std::string("../data/bunny/bunny.off");
-	const std::string filenameTarget = std::string("../data/bunny/bunny_trans.off");
+	const std::string filenameSource = std::string("../data/bunny/bunny_trans.off");
+	const std::string filenameTarget = std::string("../data/bunny/bunny.off");
 
 	SimpleMesh sourceMesh;
 	if (!sourceMesh.loadMesh(filenameSource)) {
@@ -25,17 +25,17 @@ int alignBunnyWithProcrustes() {
 	}
 
 	// Fill in the matched points: sourcePoints[i] is matched with targetPoints[i].
-	std::vector<Vector3f> sourcePoints; 
-	sourcePoints.push_back(Vector3f(-0.0106867f, 0.179756f, -0.0283248f)); // left ear
-	sourcePoints.push_back(Vector3f(-0.0639191f, 0.179114f, -0.0588715f)); // right ear
-	sourcePoints.push_back(Vector3f(0.0590575f, 0.066407f, 0.00686641f)); // tail
-	sourcePoints.push_back(Vector3f(-0.0789843f, 0.13256f, 0.0519517f)); // mouth
-	
+	std::vector<Vector3f> sourcePoints;
+	sourcePoints.push_back(Vector3f(-0.02744f, 0.179958f, 0.00980739f)); // left ear
+	sourcePoints.push_back(Vector3f(-0.0847672f, 0.180632f, -0.0148538f)); // right ear
+	sourcePoints.push_back(Vector3f(0.0544159f, 0.0715162f, 0.0231181f)); // tail
+	sourcePoints.push_back(Vector3f(-0.0854079f, 0.10966f, 0.0842135f)); // mouth
+
 	std::vector<Vector3f> targetPoints;
-	targetPoints.push_back(Vector3f(-0.02744f, 0.179958f, 0.00980739f)); // left ear
-	targetPoints.push_back(Vector3f(-0.0847672f, 0.180632f, -0.0148538f)); // right ear
-	targetPoints.push_back(Vector3f(0.0544159f, 0.0715162f, 0.0231181f)); // tail
-	targetPoints.push_back(Vector3f(-0.0854079f, 0.10966f, 0.0842135f)); // mouth
+	targetPoints.push_back(Vector3f(-0.0106867f, 0.179756f, -0.0283248f)); // left ear
+	targetPoints.push_back(Vector3f(-0.0639191f, 0.179114f, -0.0588715f)); // right ear
+	targetPoints.push_back(Vector3f(0.0590575f, 0.066407f, 0.00686641f)); // tail
+	targetPoints.push_back(Vector3f(-0.0789843f, 0.13256f, 0.0519517f)); // mouth
 		
 	// Estimate the pose from source to target mesh with Procrustes alignment.
 	ProcrustesAligner aligner;
