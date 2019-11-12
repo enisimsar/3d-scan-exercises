@@ -52,13 +52,13 @@ private:
         unsigned int max_iter = std::max(sourcePoints.size(), targetPoints.size());
 
         for (unsigned int i = 0; i < max_iter; i++) {
-            if (i < sourcePoints.size()){
+            if (i < sourcePoints.size()) {
                 Vector3f p = sourcePoints[i] - sourceMean; // mean-centered
                 source(0, i) = p.x();
                 source(1, i) = p.y();
                 source(2, i) = p.z();
             }
-            if (i < targetPoints.size()){
+            if (i < targetPoints.size()) {
                 Vector3f p = targetPoints[i] - targetMean; // Mean-centered
                 target(0, i) = p.x();
                 target(1, i) = p.y();
