@@ -23,14 +23,6 @@ public:
         // You can access parts of the matrix with .block(start_row, start_col, num_rows, num_cols) = elements
         Matrix4f estimatedPose = Matrix4f::Identity();
 
-        std::cout << rotation << std::endl;
-        std::cout << translation << std::endl;
-
-        std::cout << '----------------' << std::endl;
-
-        std::cout << sourceMean << std::endl;
-        std::cout << targetMean << std::endl;
-
         // -R * xMean + t + xMean = -R * (yMean - t) + (yMean - xMean) + xMean = R * t + R * yMean + yMean
         estimatedPose.block(0, 0, 3, 3) = rotation;
         estimatedPose.block(0, 3, 3, 1) = rotation * translation - rotation * targetMean + targetMean;
@@ -54,28 +46,16 @@ private:
         // To compute the singular value decomposition you can use JacobiSVD() from Eigen.
         // Important: The covariance matrices should contain mean-centered source/target points.
         Matrix3f rotation = Matrix3f::Identity();
-        MatrixXf source(3, sourcePoints.size());
-        MatrixXf target(3, targetPoints.size());
+        MatrixXf source(sourcePoints.size(), 3);
+        MatrixXf target(targetPoints.size(), 3);
 
-        unsigned int max_iter = std::max(sourcePoints.size(), targetPoints.size());
-
-        for (unsigned int i = 0; i < max_iter; i++) {
-            if (i < sourcePoints.size()) {
-                Vector3f p = sourcePoints[i] - sourceMean; // mean-centered
-                source(0, i) = p.x();
-                source(1, i) = p.y();
-                source(2, i) = p.z();
-            }
-            if (i < targetPoints.size()) {
-                Vector3f p = targetPoints[i] - targetMean; // mean-centered
-                target(0, i) = p.x();
-                target(1, i) = p.y();
-                target(2, i) = p.z();
-            }
-
+        for (unsigned int i = 0; i < std::max(sourcePoints.size(), targetPoints.size()); i++) {
+            // mean-centered points
+            if (i < sourcePoints.size()) source.row(i) = sourcePoints[i] - sourceMean;
+            if (i < targetPoints.size()) target.row(i) = targetPoints[i] - targetMean;
         }
 
-        JacobiSVD<MatrixXf> svd(target * source.transpose(), ComputeFullV | ComputeFullU);
+        JacobiSVD<MatrixXf> svd(target.transpose() * source, ComputeFullV | ComputeFullU);
         rotation = svd.matrixU() * svd.matrixV().transpose();
 
         return rotation;
