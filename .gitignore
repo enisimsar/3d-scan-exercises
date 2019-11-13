@@ -41,3 +41,4 @@ libs
 cmake-build-debug/
 cmake-build-release/
 *.off
+results
