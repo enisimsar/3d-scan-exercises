@@ -13,7 +13,7 @@ struct RegistrationCostFunction {
 
     template<typename T>
     bool operator()(const T *const deg, const T *const tx, const T *const ty, T *residual) const {
-        residual[0] = T(w.w) * sqrt(pow(T(p.x) * cos(deg[0]) - T(p.y) * sin(deg[0]) + tx[0] - T(q.x), 2) +
+        residual[0] = T(w.w) * (pow(T(p.x) * cos(deg[0]) - T(p.y) * sin(deg[0]) + tx[0] - T(q.x), 2) +
                                     pow(T(p.x) * sin(deg[0]) + T(p.y) * cos(deg[0]) + ty[0] - T(q.y), 2));
 
         return true;
