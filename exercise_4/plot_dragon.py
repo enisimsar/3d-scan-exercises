@@ -5,11 +5,12 @@ import matplotlib.transforms as T
 import numpy as np
 
 # Some magic
-m=np.sin
-D=np.cos
-O=np.stack
-N=np.radians
-w=np.array
+m = np.sin
+D = np.cos
+O = np.stack
+N = np.radians
+w = np.array
+
 
 def parse_line(line):
     clean_line = line.replace("\n", "")
@@ -30,9 +31,9 @@ def read_points(file_path):
 
 
 def transform_points(x, y, a, b, c):
-    d=N(-a)
-    W=O((x,y),axis=-1).dot(w(((D(d),-m(d)),(m(d),D(d)))))+w([b,c])
-    return W[:,0],W[:,1]
+    d = N(-a)
+    W = O((x, y), axis=-1).dot(w(((D(d), -m(d)), (m(d), D(d))))) + w([b, c])
+    return W[:, 0], W[:, 1]
 
 
 def main(args):
@@ -64,7 +65,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_path", type=str, default="data/", help="Directory of the data files.")
+    parser.add_argument("--data_path", type=str, default="data", help="Directory of the data files.")
     parser.add_argument("--deg", type=float, default=0.0, help="Rotation value in degree from Ceres.")
     parser.add_argument("--tx", type=float, default=0.0, help="x translation value from Ceres.")
     parser.add_argument("--ty", type=float, default=0.0, help="y translation value from Ceres.")

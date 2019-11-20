@@ -7,11 +7,9 @@ project(exercise_04)
 # Options
 set(LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../libs CACHE PATH "Path to lib folder")
 set(Eigen3_INCLUDE_DIR ${LIBRARY_DIR}/Eigen/ CACHE PATH "Path to Eigen source folder")
-# set(Ceres_INCLUDE_DIR ${LIBRARY_DIR}/ceres-solver/include CACHE PATH "Path to ceres source folder")
-# set(glog_DIR_HINT ${LIBRARY_DIR}/glog-lib/ CACHE PATH "Path to glog source folder")
-set(glog_INCLUDE_DIR ${LIBRARY_DIR}/glog-lib/include CACHE PATH "Path to glog source folder")
-set(Ceres_DIR ${LIBRARY_DIR}/Ceres/CMake CACHE PATH "Path to Ceres build folder")
-set(Ceres_INCLUDE_DIR ${Ceres_DIR}/../include)
+set(glog_INCLUDE_DIR /usr/local/Cellar/glog/0.4.0/include CACHE PATH "Path to glog source folder")
+set(Ceres_DIR /usr/local/Cellar/ceres-solver/1.14.0_9/lib/cmake CACHE PATH "Path to Ceres build folder")
+set(Ceres_INCLUDE_DIR /usr/local/Cellar/ceres-solver/1.14.0_9/include)
 
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${Ceres_DIR})
 

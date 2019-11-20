@@ -42,3 +42,6 @@ cmake-build-debug/
 cmake-build-release/
 *.off
 results
+
+*.png
+*.txt
