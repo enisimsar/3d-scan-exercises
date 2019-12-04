@@ -81,8 +81,11 @@ public:
 					continue;
 				}
 
-				// TODO: Compute the normals using central differences. 
-				normalsTmp[idx] = Vector3f(1, 1, 1); // Needs to be replaced.
+				// TODO: Compute the normals using central differences.
+                Vector3f r2l = pointsTmp[idx + 1] - pointsTmp[idx - 1]; // right to left
+                Vector3f b2t = pointsTmp[idx + width] - pointsTmp[idx - width]; // bottom to top
+
+                normalsTmp[idx] = r2l.cross(b2t); // Needs to be replaced.
 				normalsTmp[idx].normalize();
 			}
 		}
